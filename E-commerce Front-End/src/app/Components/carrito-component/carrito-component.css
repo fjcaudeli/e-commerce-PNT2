@@ -1,0 +1,17 @@
+.quantity-input {
+  max-width: 90px;
+}
+
+.cart-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+@media (max-width: 576px) {
+  .cart-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

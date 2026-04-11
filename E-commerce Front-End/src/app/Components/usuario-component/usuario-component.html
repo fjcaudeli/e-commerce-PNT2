@@ -1,0 +1,77 @@
+<div class="container mt-4">
+  <h3 class="text-center mb-4">Gestión de Usuarios</h3>
+
+  <!-- Botón para mostrar el formulario -->
+  <div class="text-end mb-3">
+    <button class="btn btn-primary" (click)="mostrarForm()">
+      <i class="bi bi-plus-circle"></i> Agregar Usuario
+    </button>
+  </div>
+
+  <!-- Formulario de usuario -->
+  <div *ngIf="showForm" class="card shadow-sm p-4 mb-4">
+    <h5 class="mb-3">{{ editMode ? 'Editar Usuario' : 'Nuevo Usuario' }}</h5>
+
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label">Nombre Completo</label>
+        <input type="text" class="form-control" [(ngModel)]="NombreCompleto" placeholder="Ingrese el nombre completo">
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Usuario</label>
+        <input type="text" class="form-control" [(ngModel)]="Usuario" placeholder="Ingrese el nombre de usuario">
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Clave</label>
+        <input type="password" class="form-control" [(ngModel)]="Clave" placeholder="Ingrese la clave">
+      </div>
+    </div>
+
+    <div class="mt-4 text-end">
+      <button *ngIf="!editMode" class="btn btn-success me-2" (click)="PostUser()">
+        <i class="bi bi-check-circle"></i> Agregar
+      </button>
+      <button *ngIf="editMode" class="btn btn-warning me-2" (click)="PutUser()">
+        <i class="bi bi-pencil-square"></i> Guardar Cambios
+      </button>
+      <button class="btn btn-secondary" (click)="ocultarForm()">
+        <i class="bi bi-x-circle"></i> Cancelar
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabla de usuarios -->
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Acciones</th>
+          <th>Id</th>
+          <th>Nombre Completo</th>
+          <th>Usuario</th>
+          <th>Clave</th>
+          <th>Fecha Alta</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let x of dataSourceUsuarios">
+          <td>
+            <button class="btn btn-sm btn-outline-primary me-2" (click)="Actualizar(x)">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger" (click)="DeleteUser(x.Id)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+          <td>{{ x.Id }}</td>
+          <td>{{ x.NombreCompleto }}</td>
+          <td>{{ x.Usuario }}</td>
+          <td>{{ x.Clave }}</td>
+          <td>{{ x.FechaAlta }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

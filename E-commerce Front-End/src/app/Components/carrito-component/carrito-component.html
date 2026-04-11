@@ -1,0 +1,67 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Carrito</h2>
+    <a class="btn btn-outline-secondary" routerLink="/productos">Seguir comprando</a>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="alert alert-info" *ngIf="items.length === 0">
+    Todavia no agregaste productos.
+  </div>
+
+  <div class="table-responsive" *ngIf="items.length > 0">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Precio</th>
+          <th>Cantidad</th>
+          <th>Subtotal</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items">
+          <td>
+            <strong>{{ item.producto.nombre }}</strong>
+            <div class="text-muted">{{ item.producto.descripcion }}</div>
+          </td>
+          <td>$ {{ item.producto.precio }}</td>
+          <td>
+            <input
+              type="number"
+              class="form-control quantity-input"
+              min="1"
+              [max]="item.producto.stock"
+              [ngModel]="item.cantidad"
+              (ngModelChange)="cambiarCantidad(item, $event)">
+          </td>
+          <td>$ {{ obtenerSubtotal(item) }}</td>
+          <td class="text-end">
+            <button class="btn btn-outline-danger btn-sm" (click)="eliminar(item.producto.id)">
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cart-actions" *ngIf="items.length > 0">
+    <button class="btn btn-outline-secondary" (click)="vaciar()">
+      Vaciar carrito
+    </button>
+
+    <div class="text-end">
+      <p class="fs-4 mb-2">
+        Total: <strong>$ {{ obtenerTotal() }}</strong>
+      </p>
+      <button class="btn btn-primary" (click)="confirmarCompra()">
+        Confirmar compra
+      </button>
+    </div>
+  </div>
+</div>

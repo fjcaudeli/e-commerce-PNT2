@@ -1,0 +1,51 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Tienda</h2>
+    <a class="btn btn-outline-primary" routerLink="/carrito">Ver carrito</a>
+  </div>
+
+  <div class="alert alert-success" *ngIf="mensaje">
+    {{ mensaje }}
+  </div>
+
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 mb-4" *ngFor="let p of productos">
+      <div class="card h-100 shadow-sm">
+
+        <div class="card-body">
+          <h5>{{ p.nombre }}</h5>
+          <p>{{ p.descripcion }}</p>
+
+          <p><strong>$ {{ p.precio }}</strong></p>
+
+          <div class="mb-3">
+            <div [ngClass]="p.stock > 0 ? 'text-success' : 'text-danger'">
+              Stock: {{ p.stock }}
+            </div>
+            <div class="text-muted">
+              {{ cantidadEnCarrito(p.id) }} en el carrito
+            </div>
+          </div>
+
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary"
+                    (click)="agregarAlCarrito(p)"
+                    [disabled]="p.stock === 0">
+              Agregar al carrito
+            </button>
+
+            <button class="btn btn-outline-secondary"
+                    (click)="verDetalle(p.id)">
+              Ver detalle
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

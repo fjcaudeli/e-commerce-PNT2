@@ -1,0 +1,58 @@
+<div class="container mt-4" *ngIf="producto">
+  <button class="btn btn-outline-secondary mb-3" routerLink="/productos">
+    Volver
+  </button>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="mb-3">{{ producto.nombre }}</h2>
+      <p>{{ producto.descripcion }}</p>
+
+      <p class="fs-4">
+        <strong>$ {{ producto.precio }}</strong>
+      </p>
+
+      <div class="mb-3">
+        <div [ngClass]="producto.stock > 0 ? 'text-success' : 'text-danger'">
+          Stock disponible: {{ producto.stock }}
+        </div>
+        <div class="text-muted">
+          {{ cantidadActualEnCarrito }} en el carrito
+        </div>
+      </div>
+
+      <div class="alert alert-success" *ngIf="mensaje">
+        {{ mensaje }}
+      </div>
+
+      <div class="alert alert-danger" *ngIf="error">
+        {{ error }}
+      </div>
+
+      <div class="mb-3 quantity-box">
+        <label class="form-label">Cantidad</label>
+        <input
+          type="number"
+          class="form-control"
+          min="1"
+          [max]="producto.stock"
+          [(ngModel)]="cantidad"
+          [disabled]="producto.stock === 0">
+      </div>
+
+      <button class="btn btn-primary me-2" (click)="agregarAlCarrito()" [disabled]="producto.stock === 0">
+        Agregar al carrito
+      </button>
+      <a class="btn btn-outline-primary" routerLink="/carrito">
+        Ir al carrito
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-4" *ngIf="!producto">
+  <div class="alert alert-warning">
+    Producto no encontrado.
+  </div>
+  <a class="btn btn-primary" routerLink="/productos">Volver a productos</a>
+</div>

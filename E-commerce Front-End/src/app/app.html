@@ -1,0 +1,18 @@
+<nav class="navbar navbar-expand navbar-light bg-light border-bottom" *ngIf="authService.isLogged()">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/productos">TEK-E-MART</a>
+
+    <div class="navbar-nav me-auto">
+      <a class="nav-link" routerLink="/productos" routerLinkActive="active">Productos</a>
+      <a class="nav-link" routerLink="/carrito" routerLinkActive="active">
+        Carrito ({{ cantidadCarrito }})
+      </a>
+    </div>
+
+    <button class="btn btn-outline-secondary btn-sm" (click)="logout()">
+      Salir
+    </button>
+  </div>
+</nav>
+
+<router-outlet></router-outlet>
