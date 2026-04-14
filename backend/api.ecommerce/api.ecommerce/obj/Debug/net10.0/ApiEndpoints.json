@@ -141,7 +141,7 @@
     "Parameters": [
       {
         "Name": "user",
-        "Type": "api.models.DTO.UserDTO",
+        "Type": "api.models.DTO.UserLoginDTO",
         "IsRequired": true
       }
     ],
@@ -157,7 +157,7 @@
     "Parameters": [
       {
         "Name": "user",
-        "Type": "api.models.DTO.UserDTO",
+        "Type": "api.models.DTO.UserRegisterDTO",
         "IsRequired": true
       }
     ],

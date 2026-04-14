@@ -57,7 +57,7 @@ app.UseSwaggerUI(c => {
 
 app.UseCors();
 app.UseHttpsRedirection();
-app.MapControllers();
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseAuthentication();  
+app.UseAuthorization();   
+app.MapControllers();      
 app.Run();

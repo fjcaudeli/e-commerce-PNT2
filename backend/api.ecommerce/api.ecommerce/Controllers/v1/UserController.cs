@@ -22,13 +22,13 @@ namespace api.ecommerce.Controllers.v1
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(UserDTO user)
+        public async Task<IActionResult> Login(UserLoginDTO user)
         {
             return Ok(await _service.Login(user));
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register(UserDTO user)
+        public async Task<IActionResult> Register(UserRegisterDTO user)
         {
             return Ok(await _service.Register(user));
         }

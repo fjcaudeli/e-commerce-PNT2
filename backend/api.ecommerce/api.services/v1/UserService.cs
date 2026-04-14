@@ -28,7 +28,7 @@ namespace api.services.v1
             return await Task.FromResult(json);
         }
 
-        public async Task<LoginResponse> Login(UserDTO user) 
+        public async Task<LoginResponse> Login(UserLoginDTO user) 
         {
             string query = $"select * from users where username =" +
                 $"'{user.Username}' and password = '{user.Password}'";
@@ -60,7 +60,7 @@ namespace api.services.v1
             return await Task.FromResult(result);
         }
 
-        public async Task<GeneralResponse> Register(UserDTO user)
+        public async Task<GeneralResponse> Register(UserRegisterDTO user)
         {
             GeneralResponse result = new GeneralResponse();
 
@@ -76,7 +76,7 @@ namespace api.services.v1
             }
 
             string query = $"insert into users (username, password, name, email) " +
-                $"values ('{user.Username}', '{user.Password}', '{user.Username}', '')";//esto no deberia ser name y email? pero dto no tiene esos atributos
+                $"values ('{user.Username}', '{user.Password}', '{user.Name}', '{user.Email}')";
             bool success = SqliteHandler.Exec(query);
 
             result.Estado = success;
