@@ -1,0 +1,12 @@
+C:\Users\blauury\source\repos\api.ecommerce\api.models\bin\Debug\net10.0\api.models.deps.json
+C:\Users\blauury\source\repos\api.ecommerce\api.models\bin\Debug\net10.0\api.models.dll
+C:\Users\blauury\source\repos\api.ecommerce\api.models\bin\Debug\net10.0\api.models.pdb
+C:\Users\blauury\source\repos\api.ecommerce\api.models\obj\Debug\net10.0\api.models.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\blauury\source\repos\api.ecommerce\api.models\obj\Debug\net10.0\api.models.AssemblyInfoInputs.cache
+C:\Users\blauury\source\repos\api.ecommerce\api.models\obj\Debug\net10.0\api.models.AssemblyInfo.cs
+C:\Users\blauury\source\repos\api.ecommerce\api.models\obj\Debug\net10.0\api.models.csproj.CoreCompileInputs.cache
+C:\Users\blauury\source\repos\api.ecommerce\api.models\obj\Debug\net10.0\api.models.sourcelink.json
+C:\Users\blauury\source\repos\api.ecommerce\api.models\obj\Debug\net10.0\api.models.dll
+C:\Users\blauury\source\repos\api.ecommerce\api.models\obj\Debug\net10.0\refint\api.models.dll
+C:\Users\blauury\source\repos\api.ecommerce\api.models\obj\Debug\net10.0\api.models.pdb
+C:\Users\blauury\source\repos\api.ecommerce\api.models\obj\Debug\net10.0\ref\api.models.dll
