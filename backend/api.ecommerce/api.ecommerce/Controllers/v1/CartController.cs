@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.ecommerce.Controllers.v1
 {
-    [Route("api / cart")]
+    [Route("api/cart")]
     [ApiController]
     [Authorize]
 

@@ -31,7 +31,7 @@ namespace api.services.v1
             decimal total = 0;
             foreach (var item in items)
             {
-                total += (decimal)item.price * (int)item.cantidad;
+                total += (decimal)item.price * (int)item.quantity;
             }
 
             // Inserto la compra
