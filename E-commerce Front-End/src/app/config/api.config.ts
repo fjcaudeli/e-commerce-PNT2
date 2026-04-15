@@ -1,11 +1,11 @@
 export const API_CONFIG = {
-  useMocks: true,
-  baseUrl: 'https://localhost:7271/api',
+  baseUrl: 'http://localhost:5208/api',
   endpoints: {
-    login: '/login',
-    registro: '/login/create',
-    productos: '/productos',
-    ordenes: '/ordenes',
-    usuarios: '/usuarios'
+    login: '/users/Login',
+    registro: '/users/Register',
+    productos: '/products',
+    carrito: '/cart',
+    compras: '/compra',
+    usuarios: '/users'
   }
 };

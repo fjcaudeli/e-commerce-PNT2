@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../Services/authService';
 import { CarritoService } from '../../Services/carritoService';
@@ -21,12 +21,14 @@ export class ConfirmacionCompraComponent implements OnInit {
     private carritoService: CarritoService,
     private ordenService: OrdenService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.carritoService.GetItems().subscribe((items: CarritoItem[]) => {
       this.items = items;
+      this.cdr.detectChanges();
     });
   }
 
@@ -38,9 +40,11 @@ export class ConfirmacionCompraComponent implements OnInit {
       next: (response) => {
         this.orden = response.orden;
         this.items = [];
+        this.cdr.detectChanges();
       },
       error: (err: Error) => {
         this.error = err.message;
+        this.cdr.detectChanges();
       }
     });
   }

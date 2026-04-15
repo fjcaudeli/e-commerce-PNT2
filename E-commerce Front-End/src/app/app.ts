@@ -28,6 +28,7 @@ export class App implements OnInit {
 
   logout(): void {
     this.authService.logout();
+    this.carritoService.LimpiarEstadoLocal();
     this.router.navigate(['/login']);
   }
 }

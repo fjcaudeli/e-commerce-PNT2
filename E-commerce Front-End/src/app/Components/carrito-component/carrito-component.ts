@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CarritoService } from '../../Services/carritoService';
 import { CarritoItem } from '../../models';
@@ -16,7 +16,8 @@ export class CarritoComponent implements OnInit {
 
   constructor(
     private carritoService: CarritoService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -26,6 +27,7 @@ export class CarritoComponent implements OnInit {
   cargarCarrito(): void {
     this.carritoService.GetItems().subscribe((items: CarritoItem[]) => {
       this.items = items;
+      this.cdr.detectChanges();
     });
   }
 
@@ -36,9 +38,11 @@ export class CarritoComponent implements OnInit {
     this.carritoService.ModificarCantidad(item.producto.id, nuevaCantidad).subscribe({
       next: (items: CarritoItem[]) => {
         this.items = items;
+        this.cdr.detectChanges();
       },
       error: (err: Error) => {
         this.error = err.message;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -48,6 +52,7 @@ export class CarritoComponent implements OnInit {
 
     this.carritoService.EliminarProducto(productoId).subscribe((items: CarritoItem[]) => {
       this.items = items;
+      this.cdr.detectChanges();
     });
   }
 
@@ -56,6 +61,7 @@ export class CarritoComponent implements OnInit {
 
     this.carritoService.VaciarCarrito().subscribe(() => {
       this.items = [];
+      this.cdr.detectChanges();
     });
   }
 

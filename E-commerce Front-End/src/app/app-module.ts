@@ -10,7 +10,8 @@ import { ConfirmacionCompraComponent } from './Components/confirmacion-compra-co
 import { App } from './app';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { AuthInterceptor } from './Services/authInterceptor';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -43,7 +44,8 @@ const routes: Routes = [
     RouterModule.forRoot(routes)
   ],
   providers: [
-    provideZonelessChangeDetection()
+    provideZonelessChangeDetection(),
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [App]
 })

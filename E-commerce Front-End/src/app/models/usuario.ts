@@ -10,4 +10,5 @@ export interface RegistroUsuarioRequest {
   nombreCompleto: string;
   usuario: string;
   clave: string;
+  email: string;
 }

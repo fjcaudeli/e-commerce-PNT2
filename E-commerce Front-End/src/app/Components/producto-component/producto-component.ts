@@ -29,6 +29,7 @@ export class ProductosComponent implements OnInit {
 
   ngOnInit(): void {
     this.GetProductos();
+    this.carritoService.GetItems().subscribe({ error: () => undefined });
     this.carritoService.items$.subscribe((items: CarritoItem[]) => {
       this.cantidadesEnCarrito = this.armarCantidadesEnCarrito(items);
       this.cdr.detectChanges();

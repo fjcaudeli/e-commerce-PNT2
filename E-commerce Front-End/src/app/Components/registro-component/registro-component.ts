@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../Services/authService';
 
@@ -12,18 +12,20 @@ export class RegistroComponent {
 
   nombreCompleto = '';
   usuario = '';
+  email = '';
   clave = '';
   error = '';
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   registrar(): void {
     this.error = '';
 
-    if (!this.nombreCompleto || !this.usuario || !this.clave) {
+    if (!this.nombreCompleto || !this.usuario || !this.email || !this.clave) {
       this.error = 'Complete todos los campos';
       return;
     }
@@ -31,6 +33,7 @@ export class RegistroComponent {
     this.authService.registrar({
       nombreCompleto: this.nombreCompleto,
       usuario: this.usuario,
+      email: this.email,
       clave: this.clave
     }).subscribe({
       next: () => {
@@ -38,6 +41,7 @@ export class RegistroComponent {
       },
       error: (err: Error) => {
         this.error = err.message;
+        this.cdr.detectChanges();
       }
     });
   }

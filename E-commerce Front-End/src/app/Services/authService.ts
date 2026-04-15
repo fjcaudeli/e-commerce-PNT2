@@ -1,10 +1,11 @@
 ﻿import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { API_CONFIG } from '../config/api.config';
 import { LoginRequest, LoginResponse, UsuarioSesion } from '../models/auth';
 import { RegistroUsuarioRequest, Usuario } from '../models/usuario';
+import { GeneralResponse } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -17,86 +18,49 @@ export class AuthService {
   private readonly registroUrl = `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.registro}`;
 
   private user: UsuarioSesion | null = null;
-  private usuariosMock: Usuario[] = [
-    {
-      id: 1,
-      nombreCompleto: 'Administrador',
-      usuario: 'admin',
-      clave: '1234',
-      fechaAlta: new Date().toISOString()
-    }
-  ];
-
   constructor(private http: HttpClient) {}
 
   login(usuario: string, clave: string): Observable<LoginResponse> {
     const request: LoginRequest = { usuario, clave };
+    const body = {
+      username: usuario,
+      password: clave
+    };
 
-    if (!API_CONFIG.useMocks) {
-      return this.http.post<LoginResponse>(this.loginUrl, request).pipe(
-        tap((response: LoginResponse) => this.procesarLoginExitoso(response, request))
-      );
-    }
+    return this.http.post<LoginResponse>(this.loginUrl, body).pipe(
+      map((response: LoginResponse) => {
+        if (!response.estado || !response.token) {
+          throw new Error(response.mensaje || 'Credenciales incorrectas');
+        }
 
-    const usuarioEncontrado = this.usuariosMock.find(x =>
-      x.usuario === request.usuario && x.clave === request.clave
+        return response;
+      }),
+      tap((response: LoginResponse) => this.procesarLoginExitoso(response, request))
     );
-
-    if (!usuarioEncontrado) {
-      return throwError(() => new Error('Credenciales incorrectas'));
-    }
-
-    const usuarioSesion: UsuarioSesion = {
-      id: usuarioEncontrado.id ?? 0,
-      usuario: usuarioEncontrado.usuario,
-      nombreCompleto: usuarioEncontrado.nombreCompleto,
-      token: 'mock-jwt-token'
-    };
-
-    const response: LoginResponse = {
-      codigo: 1,
-      mensaje: 'login exitoso',
-      estado: true,
-      estadoUsuario: 'V',
-      fechaLogin: new Date().toISOString(),
-      token: usuarioSesion.token,
-      usuario: usuarioSesion
-    };
-
-    this.user = usuarioSesion;
-    this.guardarSesion(usuarioSesion);
-
-    return of(response);
   }
 
   registrar(request: RegistroUsuarioRequest): Observable<Usuario> {
-    if (!API_CONFIG.useMocks) {
-      const body = {
-        usuario: request.usuario,
-        nombre: request.nombreCompleto,
-        clave: request.clave
-      };
-
-      return this.http.post<Usuario>(this.registroUrl, body);
-    }
-
-    const usuarioExistente = this.usuariosMock.some(x => x.usuario === request.usuario);
-
-    if (usuarioExistente) {
-      return throwError(() => new Error('El usuario ya existe'));
-    }
-
-    const nuevoUsuario: Usuario = {
-      id: this.usuariosMock.length + 1,
-      nombreCompleto: request.nombreCompleto,
-      usuario: request.usuario,
-      clave: request.clave,
-      fechaAlta: new Date().toISOString()
+    const body = {
+      username: request.usuario,
+      password: request.clave,
+      name: request.nombreCompleto,
+      email: request.email
     };
 
-    this.usuariosMock.push(nuevoUsuario);
+    return this.http.post<GeneralResponse>(this.registroUrl, body).pipe(
+      map((response: GeneralResponse) => {
+        if (!response.estado) {
+          throw new Error(response.mensaje || 'No se pudo registrar el usuario');
+        }
 
-    return of(nuevoUsuario);
+        return {
+          nombreCompleto: request.nombreCompleto,
+          usuario: request.usuario,
+          clave: request.clave,
+          fechaAlta: new Date().toISOString()
+        };
+      })
+    );
   }
 
   logout(){
@@ -106,7 +70,7 @@ export class AuthService {
   }
 
   isLogged(): boolean {
-    return this.getToken() != null;
+    return !!this.getToken();
   }
 
   getUsuarioActual(): UsuarioSesion | null {
@@ -132,15 +96,42 @@ export class AuthService {
       return;
     }
 
-    const usuarioSesion: UsuarioSesion = response.usuario ?? {
-      id: 0,
-      usuario: request.usuario,
-      token: response.token
-    };
+    const usuarioSesion = response.usuario ?? this.crearSesionDesdeToken(response.token, request.usuario);
 
     usuarioSesion.token = response.token;
     this.user = usuarioSesion;
     this.guardarSesion(usuarioSesion);
+  }
+
+  private crearSesionDesdeToken(token: string, usuarioFallback: string): UsuarioSesion {
+    const payload = this.decodificarJwt(token);
+    const idClaim = 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier';
+    const nameClaim = 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name';
+    const givenNameClaim = 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname';
+
+    return {
+      id: Number(payload?.[idClaim] ?? 0),
+      usuario: String(payload?.[nameClaim] ?? usuarioFallback),
+      nombreCompleto: String(payload?.[givenNameClaim] ?? usuarioFallback),
+      token
+    };
+  }
+
+  private decodificarJwt(token: string): Record<string, unknown> | null {
+    const payload = token.split('.')[1];
+
+    if (!payload || typeof atob === 'undefined') {
+      return null;
+    }
+
+    const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64.padEnd(base64.length + (4 - base64.length % 4) % 4, '=');
+
+    try {
+      return JSON.parse(atob(padded)) as Record<string, unknown>;
+    } catch {
+      return null;
+    }
   }
 
   private getStorage(key: string): string | null {

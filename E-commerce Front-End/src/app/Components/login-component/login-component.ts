@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../Services/authService';
 
@@ -16,7 +16,8 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   login(): void {
@@ -34,6 +35,7 @@ export class LoginComponent {
         },
         error: (err: Error) => {
           this.error = err.message;
+          this.cdr.detectChanges();
         }
       });
   }

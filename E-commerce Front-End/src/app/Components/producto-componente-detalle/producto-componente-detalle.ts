@@ -31,6 +31,7 @@ export class ProductoComponenteDetalle implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.params['id']);
     this.GetProducto(id);
+    this.carritoService.GetItems().subscribe({ error: () => undefined });
     this.carritoService.items$.subscribe((items: CarritoItem[]) => {
       this.cantidadActualEnCarrito = this.obtenerCantidadEnCarrito(items, id);
       this.cdr.detectChanges();
